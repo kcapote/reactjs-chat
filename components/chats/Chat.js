@@ -105,6 +105,7 @@ class Chat extends Component {
           roomId: rooms.selected.id
         }
         await this.props.saveComment('chats',comment);
+        console.log(this.props);
         this.setState({texto: ""});	        
 	    }
 	}
@@ -181,8 +182,11 @@ class Chat extends Component {
   }
 
 	handlerInputChange = (e) => {
-    ///console.log(e.target.value)
-		this.setState({ texto: e.target.value })
+    //console.log(e.target.value)
+		this.setState({ texto: e.target.value });
+    console.log(this.props.comments[0]);
+
+    console.log(this.props.comments[0] );
 	}
 
 	componentWillUnmount (){
@@ -192,7 +196,7 @@ class Chat extends Component {
 	}
 
 	render (){
-    console.log(this.props);
+    //console.log(this.props);
     const {rooms} = this.props; 
    // if(true) return <div>Hola</div>
 

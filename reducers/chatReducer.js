@@ -10,7 +10,8 @@ export default (state = iniatialState, action) => {
     return state;
 
     case SAVE_COMMENT:
-      commentsTemp = {...comments, ... action.payload };
+      const commentsTemp = [...state.comments , ... action.payload] ;
+
       return {
         comments: commentsTemp
       }

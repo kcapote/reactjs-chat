@@ -9,7 +9,7 @@ export const saveComment = (collection, comment) => async dispatch => {
 
     console.log('el comentario es' , comment);
 
-    if(true) return;
+    //if(true) return;
     if(!comment) return;
 
 
@@ -19,24 +19,25 @@ export const saveComment = (collection, comment) => async dispatch => {
 
     if ( collection == 'chats' ) {
         obj = {
-          userId: `/users/${comment.userId}`,
-          message: coment.message,
-          roomId: `/rooms/${coment.roomId}`
+          userId:  db.doc(`/users/${comment.userId}`),
+          message: comment.message,
+          roomId:  db.doc(`/rooms/${comment.roomId}`)
         }
     } else {
        const chatKey = [this.state.user2.id,this.state.user1].sort().join();
         obj = {
-          userId: `/users/${comment.userId}`,
-          message: coment.message,
-          roomId: `/rooms/${coment.roomId}`,
+          userId:  db.doc(`/users/${comment.userId}`),
+          message: comment.message,
+          roomId:  db.doc(`/rooms/${comment.roomId}`),
           chatKey
         }
     } 
 
     try {
       out = await ref.add(obj);
+      console.log(out);
     } catch( err ) {      
-      console.log(err);
+      console.log('comment error',err);
       out = err; 
     } finally {
       dispatch({
