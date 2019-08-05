@@ -55,7 +55,12 @@ class SelectRoom extends Component {
   }
 
   componentDidMount(){
-    this.props.listRooms();
+    this.loadRooms();
+  }
+
+
+  loadRooms = async() =>{
+    await this.props.listRooms();
     console.log('select room',this.props);
   }
 
@@ -74,10 +79,12 @@ class SelectRoom extends Component {
                               pathname:'/chat',
                             });
 
+
   }
 
 
   render() {
+    
     if(this.props.rooms.length < 1){
       return (<Spinner/>);
     }
@@ -85,7 +92,6 @@ class SelectRoom extends Component {
     const { rooms } = this.props;
     const { auth } = this.props;
 
-    if(true) return <div>hola</div>
     return (
       <div className="mx-3 ">       
         <HeaderRooms/>

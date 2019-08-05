@@ -9,13 +9,14 @@ export const listRooms = () => async dispatch =>  {
     let ref = db.collection('rooms');
     
     try {
-      rooms = await ref.get().docs.map( doc =>
+      let { docs } = await ref.get();
+      
+      rooms = docs.map( doc =>
         ({
           id: doc.id,
           ... doc.data()
         })
       );
-      console.log('try',rooms);
       
     } catch(err){
       let { code, message } = err;
@@ -25,28 +26,11 @@ export const listRooms = () => async dispatch =>  {
       }
       rooms = error;
     } finally {
-      console.log('action', rooms);
       dispatch ({
-        type: ROOM_IN,
+        type: LIST_ROOMS,
         payload: rooms
       }); 
     }
-
-    //ref.orderBy('name','asc').onSnapshot( res => {
-    //  console.log(res);
-    //  rooms = res.docs.map(room => {
-    //    return {
-    //      id: room.id,
-    //      ...room.data()
-    //    }
-    //  });
-    //  dispatch ({
-    //    type: LIST_ROOMS,
-    //    payload: rooms
-    //  });    
-    //}, error => {
-    //  console.log(error);
-    //});
     
 }
 
