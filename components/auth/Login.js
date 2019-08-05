@@ -8,14 +8,21 @@ import Spinner from '../layout/Spinner';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [ error, setError ] = useState(false);
   const [loading, setLoading ] = useState(false);
+  const [ error, setError ] = useState({ show: false, message: '' });
 
   useEffect( () => {
     const { auth } = props;
+    if(auth.code){
+      setError({
+        show:true,
+        message: auth.code
+      });
+    }
     if( auth.user ){
       props.history.push('/home');
-    }     
+    }
+
   },[props.auth]);
 
   const login = async (e) => {
@@ -24,7 +31,7 @@ import Spinner from '../layout/Spinner';
     setLoading(true);    
     await props.login({email, password});
     setLoading(false);
-    
+
     //await props.login({ email, password }).then( () => {
     //  console.log('LOGIN',props)
     //  if(!props.auth.user) {
@@ -41,9 +48,10 @@ import Spinner from '../layout/Spinner';
   const errorLogin = (
     <div className="row alert alert-warning">   
       <small>
-        Correo o contraseña incorrectos
+        { error.message }
       </small>
-    </div>);
+    </div>
+  );
 
   if(loading){
     return <Spinner/>
@@ -83,7 +91,7 @@ import Spinner from '../layout/Spinner';
                         <label className="custom-control-label" htmlFor="customCheck">Remember Me</label>
                       </div>
                     </div>
-                    {error ? errorLogin: null}
+                    {error.show ? errorLogin: null}
                     <button type="submit" 
                             className="btn btn-primary btn-user btn-block">
                       Login

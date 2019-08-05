@@ -49,14 +49,24 @@ export const login = (user) => async dispatch => {
 
 
 export const register = (user) => async dispatch => {
-  const { fisrtName, lastName, email, login, password } = user;
+  const { firstName, lastName, email, password } = user;
   let out;
   try {
     const auth = await firebase.auth().createUserWithEmailAndPassword(email, password);
     out = { ... auth }    
-    console.log('respCreateUser', resp);
-    
+    console.log('respCreateUser', auth);
+    const ref = db.collection('users').doc(auth.user.uid);
+    const userDb = await ref.set({
+      firstName, 
+      lastName, 
+      email,
+      login: 'email',
+      createdAt: Date.now()
+    });
+    auth.userDb = userDb
+
   } catch ( err ) {
+    console.log(err)
     let { code, message } = err;
     const error = {
       code: errorAuth[code]
@@ -68,35 +78,6 @@ export const register = (user) => async dispatch => {
       payload: out
     });
   }
-
-
-
- /* firebase.auth().createUserWithEmailAndPassword(email, password).then( auth => {
-
-    const ref = db.collection('user'); 
-
-    const resp = await ref.add({
-      fisrtName, 
-      lastName, 
-      email,
-      login: 'email' 
-    });
-    
-    console.log('se creo el usuario ',resp);
-
-    dispatch({
-        type: REGISTER,
-        payload: auth
-    });
-    console.log({auth});
-  }).catch(function(error) {
-
-    const { errorCode, errorMessage } = error;
-    console.log({errorCode, errorMessage});
-  });
-
-*/
-
 };
 
 

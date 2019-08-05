@@ -1,11 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import { connect } from 'react-redux';
 import { register } from '../../actions/authActions';
-
+import Spinner from '../layout/Spinner';
 import firebase from '../db/firestore';
 
 const Register = (props) => {
-  
   
   const [ firstName, setFirstName ] = useState('');
   const [ lastName, setLastName ] = useState('');
@@ -13,40 +12,44 @@ const Register = (props) => {
   const [ password, setPassword ] = useState('');
   const [ passwordVerify, setPasswordVerify ] = useState('');
   const [ error, setError ] = useState({ show: false, message: '' });
+  const [loading, setLoading ] = useState(false);
 
-  const registerUser = (e) => {
+  const registerUser = async(e) => {
     e.preventDefault();
-    if(password != passwordVerify ){
+    setLoading(true);
 
+    if(password != passwordVerify ){
       setError({
         show: true,
         message: 'El password debe coincidir'
       });
-
       return;      
-    }
-
+    }    
     setError({
       show: false,
       message: ''
     });
 
-    const user = { firstName, lastName, email, password, passwordVerify };
+    const user = { firstName, lastName, email, password };
 
-    props.register(user);
+    await props.register(user);
+    setLoading(false);
 
   }
 
   useEffect( ()=> {
-   
+    console.log(props.auth)
     if(props.auth.code){
       setError({
         show: true,
         message: props.auth.code
       });
     }
-  
-  },[props.auth.code]);
+    if(props.auth.user){
+      props.history.push('/home');
+    }
+
+  },[props.auth]);
 
 
   const errorRegister = (
@@ -56,6 +59,8 @@ const Register = (props) => {
       </small>
     </div>
   );
+
+  if(loading) return <Spinner/>;
 
   return (
     <div className="card o-hidden border-0 shadow-lg my-5">
