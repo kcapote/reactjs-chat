@@ -12,8 +12,7 @@ export default (state = iniatialState, action) => {
     case SAVE_COMMENT:
       commentsTemp = {...comments, ... action.payload };
       return {
-        ... state,
-        commentsTemp
+        comments: commentsTemp
       }
 
     default:

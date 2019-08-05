@@ -5,14 +5,17 @@ import firebase from '../components/db/firestore';
 const db = firebase.firestore();
 
 
-export const saveComment = (collection, comment) = async dispatch => {
+export const saveComment = (collection, comment) => async dispatch => {
 
-    
+    console.log('el comentario es' , comment);
+
+    if(true) return;
     if(!comment) return;
+
 
     const ref = db.collection(collection);
     const obj = {};
-    let out ={};
+    let out = {};
 
     if ( collection == 'chats' ) {
         obj = {

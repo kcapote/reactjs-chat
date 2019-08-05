@@ -40,7 +40,8 @@ class Chat extends Component {
     //  userName: this.props.match.params.name,
     //  meId: this.props.match.params.userId
     //})
-		//this.getChats();
+    console.log(this.props);
+		this.getChats();
 	}
 
 
@@ -49,7 +50,7 @@ class Chat extends Component {
 	  this.chatsTemp=[];
 	  let ref = this.db.collection('chats');
 
-	  await ref.where("roomId","==",this.props.match.params.room)
+	  await ref.where("roomId","==",this.props.rooms.selected.id)
              .orderBy("createdAt", "desc")
              .limit(10)
              .onSnapshot((data)=>{
@@ -94,38 +95,70 @@ class Chat extends Component {
 
   }
 
-	handlerInputKey = (e) => {
+	handlerInputKey = async (e) => {
 	    if (e.key === 'Enter') {
-	      this.saveComment(e);	        
+        let { auth, rooms } = this.props;
+
+        let comment = {
+          userId: auth.user.uid,
+          message: this.state.texto,
+          roomId: rooms.selected.id
+        }
+        await this.props.saveComment('chats',comment);
+        this.setState({texto: ""});	        
 	    }
 	}
 
-	handlerClick = (e) => {
-    this.saveComment(e);
+	handlerClick = async (e) => {
+    //this.saveComment(e);
+    //if ( collection == 'chats' ) {
+    //    obj = {
+    //      userId: `/users/${comment.userId}`,
+    //      message: coment.message,
+    //      roomId: `/rooms/${coment.roomId}`
+    //    }
+    //} else {
+    //   const chatKey = [this.state.user2.id,this.state.user1].sort().join();
+    //    obj = {
+    //      userId: `/users/${comment.userId}`,
+    //      message: coment.message,
+    //      roomId: `/rooms/${coment.roomId}`,
+    //      chatKey
+    //    }
+    //} 
+    let { autn, rooms } = this.props;
+
+    let comment = {
+      userId: auth.user.uid,
+      message: this.state.texto,
+      roomId: rooms.selected.id
+    }
+    await this.props.saveComment('chats',comment);
+    this.setState({texto: ""});
 	}
 
-  saveComment = (e) => {
-    if(this.state.isRomm == true){
-      let elem = {
-            userId: this.state.meId,
-            name: this.state.userName,
-            message: this.state.texto,
-            roomId: this.props.match.params.room            
-      }
-      this.setState({texto: ""});
-      this.db.collection('chats').add(elem);
-    } else {
-      let chatKey = [this.state.user2.id,this.state.meId].sort().join();
-      let elem = {
-            userId: this.state.meId,
-            name: this.state.userName,
-            message: this.state.texto,
-            chatKey            
-      }
-      this.setState({texto: ""});
-      this.db.collection('privateChats').add(elem);
-    }
-  }
+ // saveComment = (e) => {
+ //   if(this.state.isRomm == true){
+ //     let elem = {
+ //           userId: this.state.meId,
+ //           name: this.state.userName,
+ //           message: this.state.texto,
+ //           roomId: this.props.match.params.room            
+ //     }
+ //     this.setState({texto: ""});
+ //     this.db.collection('chats').add(elem);
+ //   } else {
+ //     let chatKey = [this.state.user2.id,this.state.meId].sort().join();
+ //     let elem = {
+ //           userId: this.state.meId,
+ //           name: this.state.userName,
+ //           message: this.state.texto,
+ //           chatKey            
+ //     }
+ //     this.setState({texto: ""});
+ //     this.db.collection('privateChats').add(elem);
+ //   }
+ // }
 
   viewPrivateChats = (user) => {
     console.log('test  ' + user.id);
@@ -136,8 +169,7 @@ class Chat extends Component {
     }, () =>{
         this.loadPrivateChat();
       } 
-    );
-    
+    );    
   }
 
   viewRoomChats = () => {
@@ -149,7 +181,7 @@ class Chat extends Component {
   }
 
 	handlerInputChange = (e) => {
-    console.log(e.target.value)
+    ///console.log(e.target.value)
 		this.setState({ texto: e.target.value })
 	}
 
@@ -162,6 +194,7 @@ class Chat extends Component {
 	render (){
     console.log(this.props);
     const {rooms} = this.props; 
+   // if(true) return <div>Hola</div>
 
 		return(			
       <div className="row mb-0 " >
@@ -176,12 +209,12 @@ class Chat extends Component {
             nameChat = {this.state.nameRoom}
           />
           
-          <div className="messageChats">
+          {<div className="messageChats">
             {this.state.chats.map( chat => (
               <ChatBox chat={ {...chat, userName: this.state.userName} }/>
             ))}
             <hr></hr>
-          </div>
+          </div>}
           <div className="footer">
             <MessageBox 
                 handlerInputChange = {this.handlerInputChange}
@@ -200,7 +233,8 @@ class Chat extends Component {
 
 const mapStateToProps = state => ({
   rooms: state.roomsReducer.rooms,
-  auth: state.authReducer.auth
+  auth: state.authReducer.auth,
+  comments: state.chatReducer.comments
 });
 
-export default connect(mapStateToProps,{ saveComment })(Chat)
+export default connect( mapStateToProps, {saveComment} ) (Chat);
