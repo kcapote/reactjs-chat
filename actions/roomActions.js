@@ -35,33 +35,10 @@ export const listRooms = () => async dispatch =>  {
 }
 
 
-export const roomIn = (roomId, userId) => async dispatch => {
+export const roomIn = (room) => async dispatch => {
 
     dispatch ({
-      type: LIST_ROOMS,
-      payload: rooms
+      type: ROOM_IN,
+      payload: room
     }); 
-
-
-  //  let ref = db.collection('users');
-  //  let { docs } = await ref.where('user_id', '==', userId )
-  //                          .where('roomId','==',roomId).get();   
-  //                          
-  //  
-  //  console.log(docs);
-//
-  //  if( docs.length > 0 ) {
-//
-  //  } else {
-  //    let { id } = await ref.add({
-  //      roomId,
-  //      name: name.trim() ,
-  //      online: true
-  //    });
-  //    if (id){
-  //      this.props.history.push(`/chat/${roomId}/${name}/${id}`);
-  //      console.log('Se crea el id de usuario ' + id);
-  //    }
-  //  }
-
 }  

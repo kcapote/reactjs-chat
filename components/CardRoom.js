@@ -1,10 +1,10 @@
 import React from 'react';
 
 
-const Room = ({ room, handlerClick, user }) => {
+const Room = ({ room, handlerClick }) => {
 
   const roomIn = () => {
-    handlerClick( room, user );
+    handlerClick( room );
   }
 
   return (

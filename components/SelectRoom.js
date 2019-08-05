@@ -27,33 +27,6 @@ class SelectRoom extends Component {
 //      });
 //  }
 
-  saveRegister = async (roomId, name) => {
-   
-  //  let ref = this.db.collection('users');        
-  //  let { docs } = await ref.where('name', '==',name)
-  //                   .where('roomId','==',roomId)
-  //                   .where('online','==', true).get();
-  //  if( docs.length > 0){
-  //    console.log('Ya existe alguien con ese nombre' );   
-  //    //swal("Ya existe alguien con ese nombre", "You clicked the button!", "warning");
-  //    let userId = docs[0].id; 
-  //    this.props.history.push(`/chat/${roomId}/${name}/${userId}`);
-  //  }else{
-  //    let { id } = await ref.add({
-  //      roomId,
-  //      name: name.trim() ,
-  //      online: true
-  //    });
-  //    if (id){
-  //      this.props.history.push(`/chat/${roomId}/${name}/${id}`);
-  //      console.log('Se crea el id de usuario ' + id);
-  //    }
-  //  }     
-
-
-
-  }
-
   componentDidMount(){
     this.loadRooms();
   }
@@ -70,16 +43,14 @@ class SelectRoom extends Component {
 	//	console.log('room componentWillUnmount-------------------------')
 	}
 
-  handlerClick = ( room, user) => {
+  handlerClick = async ( room ) => {
 
+
+    await this.props.roomIn(room);
     console.log(this.props);
-    console.log({ room, user });
-   //this.props.roomIn(room.id, user.uid);
     this.props.history.push({
                               pathname:'/chat',
                             });
-
-
   }
 
 
@@ -97,10 +68,10 @@ class SelectRoom extends Component {
         <HeaderRooms/>
         <div className="card-columns">
           { rooms.list.map( (room, idx) => (
-            <CardRoom key={room.id} 
+            <CardRoom key={room} 
                       room={ room }
                       handlerClick = { this.handlerClick } 
-                      user = { auth.user } />
+                      />
           ))}
           {/*<ModalNameChat
                 show = { this.state.modalShow }
