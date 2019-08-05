@@ -1,0 +1,126 @@
+@import '~bootstrap/dist/css/bootstrap.min.css';
+
+h1, p {
+  font-family: Lato;
+}
+
+.colorTitle{
+  color: #ffff
+}
+
+.header{
+  font-size: 16px;
+}
+
+.texto{
+  font-size: 14px;
+}
+
+.borde-redondo {
+  background-color: rgb(228, 235, 238);
+  border-radius: 5px;
+}
+
+.meName{
+  color:rgb(90, 131, 117)
+}
+
+.youName{
+  color:burlywood;
+}
+
+.separate{
+  padding-left: 5px;
+  padding-right: 15px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.yourChats{
+  margin-right: 10px;
+  margin-left: 25px;
+}
+
+.meChats{
+  margin-right: 15px;
+  margin-left: 75px;
+}
+
+.boxText{
+  margin-left: 25px;
+  margin-right: 25px;
+  background-color: #bbdefb;
+  border-radius: 5px;
+}
+
+.boxUsers {
+
+  background-color: white;
+  overflow: auto;
+  height: 100vh;
+}
+
+body {
+  background: #44494A;
+ 
+}
+
+.modalHeader{
+  background-color: #bbdefb;
+  color: #004d40;
+}
+
+.modalBody{
+  background-color: #e3f2fd;
+}
+
+.modalFooter{
+  background-color: #bbdefb;
+}
+
+.puntero {
+  cursor: pointer;
+}
+
+.navbarStyle{
+  padding: 0,0,0,0;
+  margin: 0,0,0,0;
+}
+
+.main {
+  margin-top: 100px; /* Add a top margin to avoid content overlay */
+}
+
+html, body {
+    height: 100%;    
+}
+
+.containerChats {
+  overflow: auto;
+  height: 100vh;
+}
+
+.header {
+    background-color: gray;
+}
+
+.messageChats {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    min-height: 0px;
+    height: 75%;
+    background-color:azure;
+}
+
+.footer {
+  height: 25%;
+  background-color:aliceblue;
+}
+
+.fill { 
+    min-height: 100%;
+    height: 100%;
+}
+
+
+

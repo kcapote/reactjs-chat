@@ -1,0 +1,33 @@
+{
+  "name": "react",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@auth0/auth0-spa-js": "1.1.1",
+    "@firebase/util": "0.2.19",
+    "boostrap": "2.0.0",
+    "bootstrap": "4.3.1",
+    "eslint": "6.1.0",
+    "firebase": "^6.3.3",
+    "jquery": "3.4.1",
+    "open-iconic": "1.1.1",
+    "popper.js": "1.15.0",
+    "prop-types": "15.7.2",
+    "react": "16.8.6",
+    "react-bootstrap": "0.32.4",
+    "react-dom": "16.8.6",
+    "react-redux": "7.1.0",
+    "react-router-dom": "5.0.0",
+    "redux": "4.0.4",
+    "redux-thunk": "2.3.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "react-scripts": "latest"
+  }
+}
