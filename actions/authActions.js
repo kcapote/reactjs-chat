@@ -7,19 +7,28 @@ const db = firebase.firestore();
 
 const errorAuth = {
   'auth/email-already-in-use': 'El usuario ya se encuentra resgitrado',
-  'auth/weak-password': 'El password es vulnerable'
+  'auth/weak-password': 'El password es vulnerable',
+  'auth/wrong-password': 'Usuario o password es incorrecto'
 }
 
 
 export const login = (user) => async dispatch => {
   const { email, password } = user;
+  let auth = {};
+  try {
+    auth = firebase.auth().signInWithEmailAndPassword(email, password); 
+    console.log('try',auth);
 
-  try{
+  } catch( err ) {
+    console.log('catch', err);
+    let { code, message } = err;
+    const error = {
+      code: errorAuth[code]
+    }
+    auth: error;
 
-  }catch(err){
-
-  }finally{
-    dispatch({
+  } finally {
+    dispatch({ 
       type: LOGIN,
       payload: auth
     });

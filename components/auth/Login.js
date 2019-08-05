@@ -21,18 +21,23 @@ import Spinner from '../layout/Spinner';
   const login = async (e) => {
     e.preventDefault();
     console.log('comenzando login');
-    setLoading(true);
-    await props.login({ email, password }).then( () => {
-      console.log('LOGIN',props)
-      if(!props.auth.user) {
-        console.log('error');
-        setError(true);
-      }
-      setLoading(false);
-    });
-    console.log('terminando login');
+    setLoading(true);    
+    await props.login({email, password});
+    setLoading(false);
+    
+    //await props.login({ email, password }).then( () => {
+    //  console.log('LOGIN',props)
+    //  if(!props.auth.user) {
+    //    console.log('error');
+    //    setError(true);
+    //  }
+    //  setLoading(false);
+    //});
+    //console.log('terminando login');
    };
 
+  
+  
   const errorLogin = (
     <div className="row alert alert-warning">   
       <small>
