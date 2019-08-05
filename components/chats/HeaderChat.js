@@ -3,8 +3,8 @@ import React from 'react';
 const HeaderChat = ({nameChat}) => {
 
   return (
-    <nav class="navbar navbar-light bg-light">
-      <a class="navbar-brand">{nameChat ? nameChat: 'Chats' }</a>
+    <nav className="navbar navbar-light bg-light">
+      <a className="navbar-brand">{nameChat ? nameChat: 'Chats' }</a>
     </nav>
   )
 }

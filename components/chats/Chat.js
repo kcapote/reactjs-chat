@@ -4,8 +4,10 @@ import UsersOnline from './UsersOnline';
 import ChatBox from './ChatBox';
 import MessageBox from './MessageBox';
 import HeaderChat from './HeaderChat';
+import { connect } from 'react-redux';
+import { saveComment } from  '../../actions/chatActions';
 
-export default class Chat extends Component {
+class Chat extends Component {
 
 	userChats = [{
 	  key: "1",
@@ -158,12 +160,15 @@ export default class Chat extends Component {
 	}
 
 	render (){
+    console.log(this.props);
+    const {rooms} = this.props; 
+
 		return(			
       <div className="row mb-0 " >
         <div className = "col-4  p-0" >
           <UsersOnline  viewPrivateChats = { this.viewPrivateChats }
                         viewRoomChats = { this.viewRoomChats }                                      
-                        room = { this.props.match.params.room } 
+                        room = { rooms.selected.id } 
                         />
         </div>           
         <div className = "col-8 m-0 border-light containerChats p-0 " >
@@ -181,7 +186,7 @@ export default class Chat extends Component {
             <MessageBox 
                 handlerInputChange = {this.handlerInputChange}
                 handlerInputKey = {this.handlerInputKey}
-                message = {this.state.texto}
+                message = { this.state.texto }
             />
           </div>
         </div> 
@@ -192,3 +197,10 @@ export default class Chat extends Component {
 
 
 }
+
+const mapStateToProps = state => ({
+  rooms: state.roomsReducer.rooms,
+  auth: state.authReducer.auth
+});
+
+export default connect(mapStateToProps,{ saveComment })(Chat)

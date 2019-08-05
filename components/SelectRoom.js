@@ -14,7 +14,8 @@ class SelectRoom extends Component {
     sw: [],
     nameRoom: '',
     modalShow: false,
-    roomId: ''
+    roomId: '',
+    loading: false
   };
 
 
@@ -28,12 +29,22 @@ class SelectRoom extends Component {
 //  }
 
   componentDidMount(){
+   
     this.loadRooms();
+    
   }
 
 
-  loadRooms = async() =>{
+  loadRooms = async() => {
+        this.setState({
+      ... this.state,
+      loading: true
+    }); 
     await this.props.listRooms();
+    this.setState({
+      ... this.state,
+      loading: false
+    });
     console.log('select room',this.props);
   }
 
@@ -56,7 +67,7 @@ class SelectRoom extends Component {
 
   render() {
     
-    if(this.props.rooms.length < 1){
+    if(this.state.loading){
       return (<Spinner/>);
     }
     let modalClose = () => this.setState( { modalShow: false } );
@@ -68,7 +79,7 @@ class SelectRoom extends Component {
         <HeaderRooms/>
         <div className="card-columns">
           { rooms.list.map( (room, idx) => (
-            <CardRoom key={room} 
+            <CardRoom key={room.id} 
                       room={ room }
                       handlerClick = { this.handlerClick } 
                       />
@@ -92,8 +103,6 @@ class SelectRoom extends Component {
 const mapStateToProps = state => ({
   rooms: state.roomsReducer.rooms,
   auth: state.authReducer.auth
-
 })
 
 export default connect( mapStateToProps,{ listRooms, roomIn })(SelectRoom);
-//export default SelectRoom;

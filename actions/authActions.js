@@ -1,6 +1,6 @@
 import { LOGIN, REGISTER, LOGOUT } from './types';
 import firebase from '../components/db/firestore';
-import firebase from '../db/firestore';
+//import firebase from '../db/firestore';
 
 const db = firebase.firestore();
 
