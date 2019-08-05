@@ -85,6 +85,7 @@ class SelectRoom extends Component {
     const { rooms } = this.props;
     const { auth } = this.props;
 
+    if(true) return <div>hola</div>
     return (
       <div className="mx-3 ">       
         <HeaderRooms/>

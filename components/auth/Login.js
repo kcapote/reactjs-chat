@@ -18,30 +18,20 @@ import Spinner from '../layout/Spinner';
         show:true,
         message: auth.code
       });
+      return;
     }
     if( auth.user ){
       props.history.push('/home');
     }
-
   },[props.auth]);
 
   const login = async (e) => {
     e.preventDefault();
-    console.log('comenzando login');
     setLoading(true);    
     await props.login({email, password});
     setLoading(false);
 
-    //await props.login({ email, password }).then( () => {
-    //  console.log('LOGIN',props)
-    //  if(!props.auth.user) {
-    //    console.log('error');
-    //    setError(true);
-    //  }
-    //  setLoading(false);
-    //});
-    //console.log('terminando login');
-   };
+  };
 
   
   

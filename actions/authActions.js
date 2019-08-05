@@ -16,35 +16,19 @@ export const login = (user) => async dispatch => {
   const { email, password } = user;
   let auth = {};
   try {
-    auth = firebase.auth().signInWithEmailAndPassword(email, password); 
-    console.log('try',auth);
-
+    auth = await firebase.auth().signInWithEmailAndPassword(email, password);   
   } catch( err ) {
-    console.log('catch', err);
     let { code, message } = err;
     const error = {
       code: errorAuth[code]
     }
-    auth: error;
-
+    auth = error;
   } finally {
     dispatch({ 
       type: LOGIN,
       payload: auth
     });
   }
-
-  //await firebase.auth().signInWithEmailAndPassword(email, password).then( auth => {
-  //  //console.log('login existoso');
-  //  dispatch({
-  //    type: LOGIN,
-  //    payload: auth
-  //  });
-  //}).catch(function(error) {
-  //  const { code, message }= error;
-  //  console.log({code, message });
-  //});  
-
 };
 
 
@@ -53,8 +37,7 @@ export const register = (user) => async dispatch => {
   let out;
   try {
     const auth = await firebase.auth().createUserWithEmailAndPassword(email, password);
-    out = { ... auth }    
-    console.log('respCreateUser', auth);
+    out =  auth;    
     const ref = db.collection('users').doc(auth.user.uid);
     const userDb = await ref.set({
       firstName, 
@@ -63,10 +46,9 @@ export const register = (user) => async dispatch => {
       login: 'email',
       createdAt: Date.now()
     });
-    auth.userDb = userDb
+    out.userDb = userDb
 
   } catch ( err ) {
-    console.log(err)
     let { code, message } = err;
     const error = {
       code: errorAuth[code]
