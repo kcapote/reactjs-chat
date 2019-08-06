@@ -29,6 +29,7 @@ class UsersOnline extends Component {
 
   getListUsersOnline = async() => {
     await this.props.getUsersRoom(this.props.rooms.selected);
+   
   }
 
   render(){

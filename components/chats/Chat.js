@@ -9,24 +9,8 @@ import { saveComment, getComments } from  '../../actions/chatActions';
 
 class Chat extends Component {
 
-	userChats = [{
-	  key: "1",
-	  userName: "System",
-	  message: "Bienvenido al chat react",
-	}];
-
 	state = {
-	        id: '',
-	        userName: '',
-	        chats: [],
-	        texto: "",
-	        users: [],
-          meId: '',
-          user2: {},
-          isRomm: true,
-          nameRoom: '',
-          user: '',
-          room: ''
+	  texto: "",
 	}
 
   chatsTemp=[];
@@ -34,76 +18,38 @@ class Chat extends Component {
 	db = firebase.firestore();
 
 	componentDidMount(){
-    //console.log(this.props);
-    //this.setState({
-    //  ... this.state,
-    //  userName: this.props.match.params.name,
-    //  meId: this.props.match.params.userId
-    //})
-    console.log(this.props);
 		this.getChats();
 	}
-
-
+  
 
 	getChats = async () => {
-    
-    const refRoomId = this.db.collection('rooms').doc(this.props.rooms.selected.id);
-	  this.chatsTemp=[];
-	  let ref = this.db.collection('chats')
-              .where("roomId","==",refRoomId)
-              .orderBy("createdAt", "desc")
-              .limit(10);
-
-	  await ref.onSnapshot( data => {
-              this.chatsTemp=[];
-              data.docs.forEach ( async c => {
-                let data = c.data();
-                let r = data.userId.get();
-                let user = await data.userId.get();                 
-                //let room = await data.roomId.get(); 
-                let d = {
-                  key: c.id,
-                  message: data.message, 
-                  user: { id: user.id, ...user.data() },
-                 /// room: { id: room.id, ...room.data() }
-                }
-                this.chatsTemp.push(d);
-              });
-              console.log('reverse', this.chatsTemp.reverse());
-              this.setState({... this.state,
-                            chats: this.chatsTemp.reverse(),
-                            isRomm: true
-                            });
-	   });
-
-
-
-
+    console.log('comenzando');
+    await this.props.getComments(this.props.rooms.selected.id);
+    console.log('terminando');
+    this.setState({ texto: '' })
 	}
 
-  loadPrivateChat = async() => {
-    this.chatsTemp=[];
-    let chatKey = [this.state.user2.id,this.state.meId].sort().join();
-
-	  let ref = this.db.collection('privateChats');
-    await ref.where('chatKey', '==', chatKey)
-             .orderBy("createdAt", "desc")
-             .limit(10)
-             .onSnapshot((data)=>{
-              this.chatsTemp=[];
-              data.docs.forEach (chat => {
-                let d = {
-                  key: chat.id,
-                  ...chat.data(),        
-                }
-                this.chatsTemp.push(d);
-              });
-              //console.log(this.chatsTemp.reverse());
-              this.setState({chats: this.chatsTemp.reverse() });
-	   });
-
-  }
+ // loadPrivateChat = async() => {
+ //   this.chatsTemp=[];
+ //   let chatKey = [this.state.user2.id,this.state.meId].sort().join();
+//
+//	  let ref = this.db.collection('privateChats');
+ //   await ref.where('chatKey', '==', chatKey)
+ //            .orderBy("createdAt", "desc")
+ //            .limit(10)
+ //            .onSnapshot((data)=>{
+ //             this.chatsTemp=[];
+ //             data.docs.forEach (chat => {
+ //               let d = {
+ //                 id: chat.id,
+ //                 ...chat.data(),        
+ //               }
+ //               this.chatsTemp.push(d);
+ //             });
+ //             //console.log(this.chatsTemp.reverse());
+ //             this.setState({chats: this.chatsTemp.reverse() });
+//	   });
+ // }
 
 	handlerInputKey = async (e) => {
 	    if (e.key === 'Enter') {
@@ -121,22 +67,7 @@ class Chat extends Component {
 	}
 
 	handlerClick = async (e) => {
-    //this.saveComment(e);
-    //if ( collection == 'chats' ) {
-    //    obj = {
-    //      userId: `/users/${comment.userId}`,
-    //      message: coment.message,
-    //      roomId: `/rooms/${coment.roomId}`
-    //    }
-    //} else {
-    //   const chatKey = [this.state.user2.id,this.state.user1].sort().join();
-    //    obj = {
-    //      userId: `/users/${comment.userId}`,
-    //      message: coment.message,
-    //      roomId: `/rooms/${coment.roomId}`,
-    //      chatKey
-    //    }
-    //} 
+
     let { autn, rooms } = this.props;
 
     let comment = {
@@ -148,28 +79,6 @@ class Chat extends Component {
     this.setState({texto: ""});
 	}
 
- // saveComment = (e) => {
- //   if(this.state.isRomm == true){
- //     let elem = {
- //           userId: this.state.meId,
- //           name: this.state.userName,
- //           message: this.state.texto,
- //           roomId: this.props.match.params.room            
- //     }
- //     this.setState({texto: ""});
- //     this.db.collection('chats').add(elem);
- //   } else {
- //     let chatKey = [this.state.user2.id,this.state.meId].sort().join();
- //     let elem = {
- //           userId: this.state.meId,
- //           name: this.state.userName,
- //           message: this.state.texto,
- //           chatKey            
- //     }
- //     this.setState({texto: ""});
- //     this.db.collection('privateChats').add(elem);
- //   }
- // }
 
   viewPrivateChats = (user) => {
     console.log('test  ' + user.id);
@@ -190,13 +99,11 @@ class Chat extends Component {
         this.getChats();
     } );
   }
-
+ 
 	handlerInputChange = (e) => {
     //console.log(e.target.value)
 		this.setState({ texto: e.target.value });
-    console.log(this.props.comments[0]);
-
-    console.log(this.props.comments[0] );
+   
 	}
 
 	componentWillUnmount (){
@@ -206,16 +113,21 @@ class Chat extends Component {
 	}
 
 	render (){
-    console.log('chats', this.state.chats);
-
+    
     const {rooms} = this.props; 
+
+    const chatsBox = (
+      this.props.comments.map( chat => (
+                <ChatBox key = { chat.id }
+                         chat= { { ...chat, me: this.props.auth.user.uid } } />
+      ))
+    );
 
 		return(			
       <div className="row mb-0 " >
         <div className = "col-4  p-0" >
           <UsersOnline  viewPrivateChats = { this.viewPrivateChats }
-                        viewRoomChats = { this.viewRoomChats }                                      
-                         
+                        viewRoomChats = { this.viewRoomChats }
                         />
         </div>           
         <div className = "col-8 m-0 border-light containerChats p-0 " >
@@ -224,10 +136,7 @@ class Chat extends Component {
           />
           
           <div className="messageChats">
-            {this.state.chats.map( chat => (
-                <ChatBox key = { chat.id }
-                         chat= { { ...chat, me: this.props.user.uid } } />
-            ))}
+            {this.props.comments.length >1 ? chatsBox: null }
             <hr></hr>
           </div>
           <div className="footer">

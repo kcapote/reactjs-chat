@@ -1,7 +1,6 @@
 import React from 'react';
 
 const ChatBox = ({chat}) => {
-  console.log('chat', chat)
   const {me ,message, user} = chat;
   return(
     <div className= { me == user.id ? "meChats" : "yourChats"}> 

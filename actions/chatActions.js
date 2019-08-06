@@ -7,8 +7,7 @@ const db = firebase.firestore();
 
 export const saveComment = (collection, comment) => async dispatch => {
 
-    console.log('el comentario es' , comment);
-
+    
     //if(true) return;
     if(!comment) return;
 
@@ -48,13 +47,46 @@ export const saveComment = (collection, comment) => async dispatch => {
 } 
 
 
-export const getComments = (roomId) => {
-  //const refRoomId = this.db.collection('rooms').doc(roomId);
-	//  const chats=[];
-	//  let ref = db.collection('chats')
-  //            .where("roomId","==",refRoomId)
-  //            .orderBy("createdAt", "desc")
-  //            .limit(10);
+export const getComments = (roomId) => async dispatch => {
+
+  const refRoomId = db.collection('rooms').doc(roomId);
+	let chats=[];
+	
+  try{
+    let ref = db.collection('chats')
+                .where("roomId","==",refRoomId)
+                .orderBy("createdAt", "desc")
+                .limit(10);
+    let observer = await ref.onSnapshot(  snap=>(
+            
+      snap.docs.map( async doc => {
+        let user = await doc.data().userId.get()  
+        let chat = {
+            id: doc.id,
+            message: doc.data().message,
+            user: {id: user.id, ...user.data() }
+        }
+        chats.push(chat);
+ 
+      })
+    ));  
+
+  
+
+  } catch ( err ){
+    console.log('getComments', err);
+    chats = err;
+
+  } finally{
+    let chatsTemp =  JSON.parse(JSON.stringify(chats)) ;
+    console.log('finally', chats);
+    console.log('finally2', chatsTemp);
+    //chats=[];
+    dispatch({
+      type: LIST_COMMENTS,
+      payload: chats
+    })
+  }
 //
 	//  await ref.onSnapshot((data)=>{
   //            chats=[];
