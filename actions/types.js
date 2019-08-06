@@ -17,4 +17,4 @@ export const LOGOUT = 'LOGOUT';
 
 //CHATS
 export const SAVE_COMMENT = 'SAVE_COMMENT';
-export const LIST_COMMENTS = 'LIST_COMMENST';
+export const LIST_COMMENTS = 'LIST_COMMENTS';

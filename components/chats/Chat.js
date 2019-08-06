@@ -5,7 +5,7 @@ import ChatBox from './ChatBox';
 import MessageBox from './MessageBox';
 import HeaderChat from './HeaderChat';
 import { connect } from 'react-redux';
-import { saveComment } from  '../../actions/chatActions';
+import { saveComment, getComments } from  '../../actions/chatActions';
 
 class Chat extends Component {
 
@@ -55,7 +55,7 @@ class Chat extends Component {
               .orderBy("createdAt", "desc")
               .limit(10);
 
-	  await ref.onSnapshot((data)=>{
+	  await ref.onSnapshot( data => {
               this.chatsTemp=[];
               data.docs.forEach ( async c => {
                 let data = c.data();
@@ -220,7 +220,7 @@ class Chat extends Component {
         </div>           
         <div className = "col-8 m-0 border-light containerChats p-0 " >
           <HeaderChat
-            nameChat = { this.state.nameRoom }
+            nameChat = { this.props.rooms.selected.name }
           />
           
           <div className="messageChats">
@@ -252,4 +252,4 @@ const mapStateToProps = state => ({
   comments: state.chatReducer.comments
 });
 
-export default connect( mapStateToProps, {saveComment} ) (Chat);
+export default connect( mapStateToProps, {saveComment, getComments} ) (Chat);

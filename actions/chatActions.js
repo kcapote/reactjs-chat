@@ -35,7 +35,6 @@ export const saveComment = (collection, comment) => async dispatch => {
 
     try {
       out = await ref.add(obj);
-      console.log(out);
     } catch( err ) {      
       console.log('comment error',err);
       out = err; 
@@ -46,24 +45,36 @@ export const saveComment = (collection, comment) => async dispatch => {
       });
     }
 
-    //if(isRoom == true){
-    //  let elem = {
-    //        userId: comment.meId,
-    //        name: comment.userName,
-    //        message: this.state.texto,
-    //        roomId: this.props.match.params.room            
-    //  }
-    //  this.setState({texto: ""});
-    //  this.db.collection('chats').add(elem);
-    //} else {
-    //  let chatKey = [this.state.user2.id,this.state.meId].sort().join();
-    //  let elem = {
-    //        userId: this.state.meId,
-    //        name: this.state.userName,
-    //        message: this.state.texto,
-    //        chatKey            
-    //  }
-    //  this.setState({texto: ""});
-    //  this.db.collection('privateChats').add(elem);
-    //}
 } 
+
+
+export const getComments = (roomId) => {
+  //const refRoomId = this.db.collection('rooms').doc(roomId);
+	//  const chats=[];
+	//  let ref = db.collection('chats')
+  //            .where("roomId","==",refRoomId)
+  //            .orderBy("createdAt", "desc")
+  //            .limit(10);
+//
+	//  await ref.onSnapshot((data)=>{
+  //            chats=[];
+  //            data.docs.forEach ( async c => {
+  //              let data = c.data();
+  //              let r = data.userId.get();
+  //              let user = await data.userId.get();                 
+  //              //let room = await data.roomId.get(); 
+  //              let d = {
+  //                key: c.id,
+  //                message: data.message, 
+  //                user: { id: user.id, ...user.data() },
+  //               /// room: { id: room.id, ...room.data() }
+  //              }
+  //              chats.push(d);
+  //            });
+  //            console.log('reverse', chats.reverse());
+  //            setState({... state,
+  //                          chats: chats.reverse(),
+  //                          isRomm: true
+  //                          });
+	//   });
+}

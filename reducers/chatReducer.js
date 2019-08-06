@@ -10,10 +10,11 @@ export default (state = iniatialState, action) => {
     return state;
 
     case SAVE_COMMENT:
-      const commentsTemp = [...state.comments , ... action.payload] ;
+      return state;
 
+    case LIST_COMMENTS:
       return {
-        comments: commentsTemp
+        comments
       }
 
     default:
