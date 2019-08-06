@@ -47,34 +47,44 @@ class Chat extends Component {
 
 
 	getChats = async () => {
+    
+    const refRoomId = this.db.collection('rooms').doc(this.props.rooms.selected.id);
 	  this.chatsTemp=[];
-	  let ref = this.db.collection('chats');
+	  let ref = this.db.collection('chats')
+              .where("roomId","==",refRoomId)
+              .orderBy("createdAt", "desc")
+              .limit(10);
 
-	  await ref.where("roomId","==",this.props.rooms.selected.id)
-             .orderBy("createdAt", "desc")
-             .limit(10)
-             .onSnapshot((data)=>{
+	  ref.onSnapshot((data)=>{
               this.chatsTemp=[];
-              data.docs.forEach (c => {
+              data.docs.forEach ( async c => {
+                let data = c.data();
+                let r = data.userId.get();
+                let user = await data.userId.get();                 
+                //let room = await data.roomId.get(); 
                 let d = {
                   key: c.id,
-                  ...c.data(),        
+                  message: data.message, 
+                  user: { id: user.id, ...user.data() },
+                 /// room: { id: room.id, ...room.data() }
                 }
                 this.chatsTemp.push(d);
               });
-              //console.log(this.chatsTemp.reverse());
+              console.log('reverse', this.chatsTemp.reverse());
               this.setState({... this.state,
                             chats: this.chatsTemp.reverse(),
                             isRomm: true
                             });
 	   });
 
+
+
+
 	}
 
   loadPrivateChat = async() => {
     this.chatsTemp=[];
     let chatKey = [this.state.user2.id,this.state.meId].sort().join();
-    console.log(chatKey);
 
 	  let ref = this.db.collection('privateChats');
     await ref.where('chatKey', '==', chatKey)
@@ -197,9 +207,10 @@ class Chat extends Component {
 
 	render (){
     //console.log(this.props);
+    console.log('chats', this.state.chats);
+
     const {rooms} = this.props; 
    // if(true) return <div>Hola</div>
-
 		return(			
       <div className="row mb-0 " >
         <div className = "col-4  p-0" >
@@ -210,15 +221,16 @@ class Chat extends Component {
         </div>           
         <div className = "col-8 m-0 border-light containerChats p-0 " >
           <HeaderChat
-            nameChat = {this.state.nameRoom}
+            nameChat = { this.state.nameRoom }
           />
           
-          {<div className="messageChats">
+          <div className="messageChats">
             {this.state.chats.map( chat => (
-              <ChatBox chat={ {...chat, userName: this.state.userName} }/>
+                <ChatBox  key={ chat.id }
+                        chat={ {...chat, me: this.props.user.uid} }/>
             ))}
             <hr></hr>
-          </div>}
+          </div>
           <div className="footer">
             <MessageBox 
                 handlerInputChange = {this.handlerInputChange}

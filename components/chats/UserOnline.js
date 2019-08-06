@@ -6,11 +6,12 @@ const UserOnline = ({user, handlerClick }) => {
       <Fragment>
         <img  className="rounded" />
         <li onDoubleClick={ () => handlerClick( user ) }
-            class="list-group-item puntero">{user.name}</li>
+            className="list-group-item puntero">{user.name}</li>
       </Fragment>    
     )
-
 }
+
+
 
 export default UserOnline;
 
