@@ -55,7 +55,7 @@ class Chat extends Component {
               .orderBy("createdAt", "desc")
               .limit(10);
 
-	  ref.onSnapshot((data)=>{
+	  await ref.onSnapshot((data)=>{
               this.chatsTemp=[];
               data.docs.forEach ( async c => {
                 let data = c.data();
@@ -206,17 +206,16 @@ class Chat extends Component {
 	}
 
 	render (){
-    //console.log(this.props);
     console.log('chats', this.state.chats);
 
     const {rooms} = this.props; 
-   // if(true) return <div>Hola</div>
+
 		return(			
       <div className="row mb-0 " >
         <div className = "col-4  p-0" >
           <UsersOnline  viewPrivateChats = { this.viewPrivateChats }
                         viewRoomChats = { this.viewRoomChats }                                      
-                        room = { rooms.selected.id } 
+                         
                         />
         </div>           
         <div className = "col-8 m-0 border-light containerChats p-0 " >
@@ -226,8 +225,8 @@ class Chat extends Component {
           
           <div className="messageChats">
             {this.state.chats.map( chat => (
-                <ChatBox  key={ chat.id }
-                        chat={ {...chat, me: this.props.user.uid} }/>
+                <ChatBox key = { chat.id }
+                         chat= { { ...chat, me: this.props.user.uid } } />
             ))}
             <hr></hr>
           </div>

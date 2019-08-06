@@ -6,7 +6,7 @@ const UserOnline = ({user, handlerClick }) => {
       <Fragment>
         <img  className="rounded" />
         <li onDoubleClick={ () => handlerClick( user ) }
-            className="list-group-item puntero">{user.name}</li>
+            className="list-group-item puntero">{`${user.firstName} ${user.lastName}`}</li>
       </Fragment>    
     )
 }

@@ -1,4 +1,4 @@
-import { LIST_ROOMS, ROOM_IN } from './types';
+import { LIST_ROOMS, ROOM_IN, LIST_ROOM_USER } from './types';
 import firebase from '../components/db/firestore';
 
 const db = firebase.firestore();
@@ -26,19 +26,76 @@ export const listRooms = () => async dispatch =>  {
       }
       rooms = error;
     } finally {
+      
       dispatch ({
         type: LIST_ROOMS,
         payload: rooms
       }); 
+
     }
     
 }
 
 
-export const roomIn = (room) => async dispatch => {
+export const roomIn = (room ,userId) => async dispatch => {
+    const refRoom = db.collection('rooms').doc(room.id);
+    const refUser = db.collection('users').doc(userId);
+    const refRoomUser = db.collection('roomUser');
 
-    dispatch ({
-      type: ROOM_IN,
-      payload: room
-    }); 
-}  
+    try { 
+      const resp = await refRoomUser                
+                .where('roomId','==',refRoom)
+                .where('userId','==',refUser).get();
+                
+      if(resp.empty){
+          await refRoomUser.add({
+          roomId: refRoom,
+          userId: refUser,
+          online: true
+        });
+      }        
+
+    } catch(err){
+        conole.log(err);
+    } finally{
+      dispatch ({
+        type: ROOM_IN,
+        payload: room
+      }); 
+    }           
+
+}
+
+
+export const getUsersRoom = (room) => async dispatch => {
+    
+    
+    const refRoom = db.collection('rooms').doc(room.id);
+    const refRoomUser = db.collection('roomUser');
+    const users = []; 
+    try{
+      await refRoomUser                
+      .where('roomId','==',refRoom)
+      .where('online','==', true)
+      .onSnapshot( async snapUsers => {
+          for(let i=0; i<snapUsers.docs.length; i++ ){
+            let user =  await snapUsers.docs[i].data().userId.get();
+            users.push({id: user.id, ...user.data()});     
+          }
+      });
+      
+      
+    }catch(err){
+      dispatch ({
+        type: LIST_ROOM_USER,
+        payload: users
+      }); 
+    }finally{
+      dispatch ({
+        type: LIST_ROOM_USER,
+        payload: users
+      }); 
+    }
+
+
+}

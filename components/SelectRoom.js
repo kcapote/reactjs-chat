@@ -57,7 +57,7 @@ class SelectRoom extends Component {
   handlerClick = async ( room ) => {
 
 
-    await this.props.roomIn(room);
+    await this.props.roomIn(room, this.props.auth.user.uid);
     console.log(this.props);
     this.props.history.push({
                               pathname:'/chat',
