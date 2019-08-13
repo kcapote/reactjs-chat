@@ -56,7 +56,7 @@ export const roomIn = (room ,userId) => async dispatch => {
       }        
 
     } catch(err){
-        console.log(err);
+        conole.log(err);
     } finally{
       dispatch ({
         type: ROOM_IN,

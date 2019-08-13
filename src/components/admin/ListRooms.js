@@ -5,6 +5,7 @@ import Room from './Room';
 const ListRooms = () => {
   const db = firebase.firestore();
   const [rooms, setRooms] = useState([]);
+  const []
 
   useEffect(()=>{
 

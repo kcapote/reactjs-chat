@@ -68,7 +68,7 @@ class Chat extends Component {
 
 	handlerClick = async (e) => {
 
-    let { auth, rooms } = this.props;
+    let { autn, rooms } = this.props;
 
     let comment = {
       userId: auth.user.uid,
