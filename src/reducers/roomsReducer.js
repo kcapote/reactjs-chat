@@ -10,8 +10,8 @@ const initialState = {
 
 export default function(state = initialState, action){
   switch(action.type) {
-      case LIST_ROOMS:
-        const tempRooms = {... state};
+    case LIST_ROOMS:
+      const tempRooms = {... state};
         tempRooms.rooms.list = action.payload;
         console.log(tempRooms);
         return {
@@ -19,13 +19,13 @@ export default function(state = initialState, action){
         };
 
       case ROOM_IN:
-        const tempRooms = { ... state};
+        tempRooms = { ... state};
         tempRooms.rooms.selected = action.payload;
         return {
           ... tempRooms
         }
       case LIST_ROOM_USER:
-        const tempRooms = { ... state};
+        tempRooms = { ... state};
         tempRooms.rooms.roomUsers = action.payload;
         return {
           ... tempRooms 
