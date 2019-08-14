@@ -20,7 +20,7 @@ class UsersOnline extends Component {
   }
 
   handlerClick = (user) => {
-    if(user.id == -1){
+    if(user.id === -1){
       this.props.viewRoomChats();
     }else{
       this.props.viewPrivateChats(user);

@@ -18,7 +18,7 @@ export const login = (user) => async dispatch => {
   try {
     auth = await firebase.auth().signInWithEmailAndPassword(email, password);   
   } catch( err ) {
-    let { code, message } = err;
+    let { code } = err;
     const error = {
       code: errorAuth[code]
     }
@@ -49,11 +49,11 @@ export const register = (user) => async dispatch => {
     out.userDb = userDb
 
   } catch ( err ) {
-    let { code, message } = err;
+    let { code } = err;
     const error = {
       code: errorAuth[code]
     }
-    out = {... error};    
+    out = {...error};    
   } finally {
     dispatch({
       type: REGISTER,

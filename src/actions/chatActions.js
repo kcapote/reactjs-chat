@@ -1,6 +1,6 @@
 import { SAVE_COMMENT, LIST_COMMENTS } from './types';
 import firebase from '../components/db/firestore';
-
+import { Observable } from 'rxjs';
 
 const db = firebase.firestore();
 
@@ -13,10 +13,10 @@ export const saveComment = (collection, comment) => async dispatch => {
 
 
     const ref = db.collection(collection);
-    const obj = {};
+    let obj = {};
     let out = {};
 
-    if ( collection == 'chats' ) {
+    if ( collection === 'chats' ) {
         obj = {
           userId:  db.doc(`/users/${comment.userId}`),
           message: comment.message,
@@ -47,45 +47,93 @@ export const saveComment = (collection, comment) => async dispatch => {
 } 
 
 
-export const getComments = (roomId) => async dispatch => {
+export const getComments = (roomId, dateTo) => async dispatch => {
 
   const refRoomId = db.collection('rooms').doc(roomId);
 	let chats=[];
-	
+  let chatObserver;
+
   try{
-    let ref = db.collection('chats')
+    
+    let ref = (dateTo ==='' ? db.collection('chats')
                 .where("roomId","==",refRoomId)
                 .orderBy("createdAt", "desc")
-                .limit(10);
-    let observer = await ref.onSnapshot(  snap=>(
-            
-      snap.docs.map( async doc => {
-        let user = await doc.data().userId.get()  
-        let chat = {
-            id: doc.id,
-            message: doc.data().message,
-            user: {id: user.id, ...user.data() }
-        }
-        chats.push(chat);
- 
-      })
-    ));  
+                .limit(10)
+                :
+                db.collection('chats')
+                .where("roomId","==",refRoomId)
+                .orderBy("createdAt", "desc")
+                .endAt(dateTo)
+                .limit(10)
+                );    
 
-  
+    chatObserver = new Observable( observer => {
+      ref.onSnapshot( snapshot => {
+        snapshot.docs.map( async doc => {
+         let user = await doc.data().userId.get();  
+         let chat = {
+             id: doc.id,
+             message: doc.data().message,
+             user: { id: user.id, ...user.data() }
+         }
+         chats.push(chat);
+        }       
+       );
+
+       console.log({chats});
+       let rever = JSON.parse(JSON.stringify(chats));
+       rever = rever.reverse();
+       console.log({rever});
+
+       observer.next(chats);
+      })
+    });   
+    
+    
+    chatObserver.subscribe( commments =>{
+      dispatch({
+        type: LIST_COMMENTS,
+        payload: commments
+      })
+    } )
+    
+
+    //  chatObserver.subscribe( comment => {
+    //    console.log({comment});
+    //  })
+    //  console.log('los chats' ,chatObserver);
+    
+    // chatObserver = new Observable(observer =>{
+    //   ref.onSnapshot(snapshot => {
+    //     observer.next  ( Promise.all (snapshot.docs.map( async doc => {
+    //         let user = await doc.data().userId.get()  
+    //         let chat = {
+    //             id: doc.id,
+    //             message: doc.data().message,
+    //             user: {id: user.id, ...user.data() }
+    //         }
+    //         return chat;      
+    //       })).then( comments => comments)
+    //       )
+    //   });
+    // });
+    
+    //let observer = await ref.onSnapshot(  snap=>(
+    //        
+    //  snap.docs.map( async doc => {
+    //    let user = await doc.data().userId.get()  
+    //    let chat = {
+    //        id: doc.id,
+    //        message: doc.data().message,
+    //        user: {id: user.id, ...user.data() }
+    //    }
+    //    chats.push(chat);
+    //   })
+    //));    
 
   } catch ( err ){
     console.log('getComments', err);
     chats = err;
-
-  } finally{
-    let chatsTemp =  JSON.parse(JSON.stringify(chats)) ;
-    console.log('finally', chats);
-    console.log('finally2', chatsTemp);
-    //chats=[];
-    dispatch({
-      type: LIST_COMMENTS,
-      payload: chats
-    })
   }
 //
 	//  await ref.onSnapshot((data)=>{

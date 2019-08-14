@@ -1,4 +1,7 @@
-import { LIST_ROOMS, SAVE_USER, UPDATE_USER, ROOM_IN, LIST_ROOM_USER } from '../actions/types';
+import { LIST_ROOMS, 
+        //  SAVE_USER, 
+        //  UPDATE_USER, 
+         ROOM_IN, LIST_ROOM_USER } from '../actions/types';
 
 const initialState = {
   rooms: {
@@ -9,26 +12,27 @@ const initialState = {
 }
 
 export default function(state = initialState, action){
+  let tempRooms = {};  
   switch(action.type) {
       case LIST_ROOMS:
-        const tempRooms = {... state};
+        tempRooms = {...state};
         tempRooms.rooms.list = action.payload;
         console.log(tempRooms);
         return {
-          ... tempRooms
+          ...tempRooms
         };
 
       case ROOM_IN:
-        tempRooms = { ... state};
+        tempRooms = { ...state};
         tempRooms.rooms.selected = action.payload;
         return {
-          ... tempRooms
+          ...tempRooms
         }
       case LIST_ROOM_USER:
-        tempRooms = { ... state};
+        tempRooms = { ...state};
         tempRooms.rooms.roomUsers = action.payload;
         return {
-          ... tempRooms 
+          ...tempRooms 
         }
       default: 
         return state;

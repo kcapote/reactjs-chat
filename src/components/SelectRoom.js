@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import HeaderRooms from './HeaderRooms';
-import ModalNameChat from './ModalNameChat';
+//import ModalNameChat from './ModalNameChat';
 //import swal from 'sweetalert';
 import CardRoom from './CardRoom';
 import { connect } from 'react-redux';
 import { listRooms, roomIn } from '../actions/roomActions';
 import  Spinner  from './layout/Spinner';
-import { compose } from 'redux'; 
+// import { compose } from 'redux'; 
 
 class SelectRoom extends Component {
 
@@ -21,7 +21,7 @@ class SelectRoom extends Component {
 
 //  handlerClick = async (idx, roomId) => {
 //    this.setState({
-//      ... this.state,
+//      ...this.state,
 //      nameRoom: this.state.rooms[idx].name,
 //      modalShow: true,
 //      roomId: roomId
@@ -37,12 +37,12 @@ class SelectRoom extends Component {
 
   loadRooms = async() => {
         this.setState({
-      ... this.state,
+      ...this.state,
       loading: true
     }); 
     await this.props.listRooms();
     this.setState({
-      ... this.state,
+      ...this.state,
       loading: false
     });
     console.log('select room',this.props);
@@ -70,10 +70,9 @@ class SelectRoom extends Component {
     if(this.state.loading){
       return (<Spinner/>);
     }
-    let modalClose = () => this.setState( { modalShow: false } );
+    //let modalClose = () => this.setState( { modalShow: false } );
     const { rooms } = this.props;
-    const { auth } = this.props;
-
+    
     return (
       <div className="mx-3 ">       
         <HeaderRooms/>

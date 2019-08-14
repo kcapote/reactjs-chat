@@ -1,6 +1,5 @@
-import React, {useState, useEffect, Fragment } from 'react';
+import React, {useState, Fragment } from 'react';
 import firebase from '../db/firestore';
-import ListRooms from './ListRooms';
 
 
 const CreateRoom  = () => {

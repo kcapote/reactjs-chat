@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
-import { render } from 'react-dom';
 import Navbar from './components/layout/Navbar';
 import SelectRoom from './components/SelectRoom';
 import Chat from './components/chats/Chat';

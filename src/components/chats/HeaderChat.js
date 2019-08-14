@@ -4,7 +4,7 @@ const HeaderChat = ({nameChat}) => {
 
   return (
     <nav className="navbar navbar-light bg-light">
-      <a className="navbar-brand">{nameChat ? nameChat: 'Chats' }</a>
+      <a href='#' className="navbar-brand" >{nameChat ? nameChat: 'Chats' }</a>
     </nav>
   )
 }

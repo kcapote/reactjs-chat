@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { connect } from 'react-redux';
 import { register } from '../../actions/authActions';
 import Spinner from '../layout/Spinner';
-import firebase from '../db/firestore';
+//import firebase from '../db/firestore';
 
 const Register = (props) => {
   
@@ -18,7 +18,7 @@ const Register = (props) => {
     e.preventDefault();
     setLoading(true);
 
-    if(password != passwordVerify ){
+    if(password !== passwordVerify ){
       setError({
         show: true,
         message: 'El password debe coincidir'

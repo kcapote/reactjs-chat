@@ -18,7 +18,7 @@ const ListRooms = () => {
       temp = rooms.docs.map( doc => {
           return {
             id: doc.id,
-            ... doc.data()
+            ...doc.data()
           }
       });
       console.log( temp);

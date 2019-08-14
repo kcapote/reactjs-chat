@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment } from 'react';
+import React, {  Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../actions/authActions';
@@ -7,7 +7,6 @@ import { logout } from '../../actions/authActions';
 
 const  Navbar = (props) => {
 
-const { name } = props;
 const { auth } = props;
 
 const logout = () => {
@@ -25,7 +24,7 @@ const optionLogged = (
                 className="nav-link"> Home </NavLink>            
       </li>
       <li className="nav-item dropdown">
-        <a className="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a className="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Administrar Salas
         </a>
         <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">

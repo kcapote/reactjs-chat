@@ -11,7 +11,7 @@ export default class ModalNameChat extends Component {
 
   onChange = e => {
      this.setState({
-      ... this.state,      
+      ...this.state,      
       [e.target.name] : e.target.value
     })
   }

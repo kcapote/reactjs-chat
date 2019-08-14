@@ -14,7 +14,7 @@ export const listRooms = () => async dispatch =>  {
       rooms = docs.map( doc =>
         ({
           id: doc.id,
-          ... doc.data()
+          ...doc.data()
         })
       );
       

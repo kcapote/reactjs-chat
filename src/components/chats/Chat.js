@@ -10,7 +10,8 @@ import { saveComment, getComments } from  '../../actions/chatActions';
 class Chat extends Component {
 
 	state = {
-	  texto: "",
+    texto: "",
+    chats: []
 	}
 
   chatsTemp=[];
@@ -23,10 +24,23 @@ class Chat extends Component {
   
 
 	getChats = async () => {
-    console.log('comenzando');
-    await this.props.getComments(this.props.rooms.selected.id);
-    console.log('terminando');
-    this.setState({ texto: '' })
+    let ultChat = this.props.comments.length > 0 ? this.props.comments[0].createdAt: '';
+    console.log('el ultchat es ', ultChat, this.props.comments.length);
+    await this.props.getComments(this.props.rooms.selected.id, ultChat );
+    this.setState({ texto: '' });
+    let { comments } = this.props;
+    console.log({ comments });
+    
+
+    // comments.subscribe( comments => {
+    //   //let tempChats = [ ...this.state.chats, ...comments]; 
+    //   this.setState( { 
+    //       ...this.state, 
+    //       chats: comments
+    //   },()=>{
+    //     console.log('los chats', this.state.chats);
+    //   });
+    // });    
 	}
 
  // loadPrivateChat = async() => {
@@ -62,7 +76,8 @@ class Chat extends Component {
         }
         await this.props.saveComment('chats',comment);
         console.log(this.props);
-        this.setState({texto: ""});	        
+        this.setState({texto: ""});
+        this.getChats();	        
 	    }
 	}
 
@@ -83,7 +98,7 @@ class Chat extends Component {
   viewPrivateChats = (user) => {
     console.log('test  ' + user.id);
     this.setState({
-        ... this.state,
+        ...this.state,
         user2: user,
         isRomm: false
     }, () =>{
@@ -114,13 +129,14 @@ class Chat extends Component {
 
 	render (){
     
-    const {rooms} = this.props; 
+    // const {rooms} = this.props; 
 
     const chatsBox = (
-      this.props.comments.map( chat => (
-                <ChatBox key = { chat.id }
-                         chat= { { ...chat, me: this.props.auth.user.uid } } />
-      ))
+       this.state.chats.map( chat => (
+                 <ChatBox key = { chat.id }
+                          chat= { { ...chat, me: this.props.auth.user.uid } } />
+       ))
+      
     );
 
 		return(			
@@ -136,7 +152,7 @@ class Chat extends Component {
           />
           
           <div className="messageChats">
-            {this.props.comments.length >1 ? chatsBox: null }
+            {this.state.chats.length >1 ? chatsBox: null }
             <hr></hr>
           </div>
           <div className="footer">
