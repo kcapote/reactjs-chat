@@ -53,7 +53,7 @@ class UsersOnline extends Component {
 
 const stateMapToProps = (state) =>({
   auth: state.authReducer.auth,
-  rooms: state.roomsReducer.rooms
+  rooms: state.rooms
 });
 export default connect(stateMapToProps,{getUsersRoom})(UsersOnline)
 

@@ -15,8 +15,8 @@ import './style.css';
 const App = () => {
 
   return (
-    <Provider store = { store }>
-      <Router>
+    <Router>
+      <Provider store = { store }>
         <Navbar />
         <div className="container fill">
           <div className="main">
@@ -32,8 +32,8 @@ const App = () => {
             </Switch>
           </div>  
         </div>  
-      </Router>
-    </Provider>
+      </Provider>
+    </Router>
   );  
 
 }

@@ -56,12 +56,9 @@ class SelectRoom extends Component {
 
   handlerClick = async ( room ) => {
 
-
     await this.props.roomIn(room, this.props.auth.user.uid);
     console.log(this.props);
-    this.props.history.push({
-                              pathname:'/chat',
-                            });
+    this.props.history.push('/chat');
   }
 
 
@@ -72,7 +69,7 @@ class SelectRoom extends Component {
     }
     //let modalClose = () => this.setState( { modalShow: false } );
     const { rooms } = this.props;
-    
+
     return (
       <div className="mx-3 ">       
         <HeaderRooms/>
@@ -83,14 +80,6 @@ class SelectRoom extends Component {
                       handlerClick = { this.handlerClick } 
                       />
           ))}
-          {/*<ModalNameChat
-                show = { this.state.modalShow }
-                onHide = { modalClose }
-                nameroom = { this.state.nameRoom }
-                roomid = { this.state.roomId }
-                saveregister = { this.saveRegister }
-              />
-              */}
         </div>
       </div>
 
@@ -100,7 +89,7 @@ class SelectRoom extends Component {
 }
 
 const mapStateToProps = state => ({
-  rooms: state.roomsReducer.rooms,
+  rooms: state.rooms,
   auth: state.authReducer.auth
 })
 

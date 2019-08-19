@@ -4,35 +4,29 @@ import { LIST_ROOMS,
          ROOM_IN, LIST_ROOM_USER } from '../actions/types';
 
 const initialState = {
-  rooms: {
     list: [],
     selected: {},
     roomUsers:[]
-  }
 }
 
 export default function(state = initialState, action){
-  let tempRooms = {};  
+  
   switch(action.type) {
       case LIST_ROOMS:
-        tempRooms = {...state};
-        tempRooms.rooms.list = action.payload;
-        console.log(tempRooms);
         return {
-          ...tempRooms
+          ...state,
+          list: [...action.payload]
         };
 
       case ROOM_IN:
-        tempRooms = { ...state};
-        tempRooms.rooms.selected = action.payload;
         return {
-          ...tempRooms
+          ...state,
+          selected : action.payload
         }
       case LIST_ROOM_USER:
-        tempRooms = { ...state};
-        tempRooms.rooms.roomUsers = action.payload;
         return {
-          ...tempRooms 
+          ...state,
+          roomUsers: action.payload 
         }
       default: 
         return state;

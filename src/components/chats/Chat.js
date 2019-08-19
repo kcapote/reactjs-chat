@@ -9,38 +9,64 @@ import { saveComment, getComments } from  '../../actions/chatActions';
 
 class Chat extends Component {
 
+  db = firebase.firestore();
 	state = {
     texto: "",
-    chats: []
+    chats: [],
+    firstTime: false
 	}
 
   chatsTemp=[];
-
+  
 	db = firebase.firestore();
+  query = null;
 
 	componentDidMount(){
 		this.getChats();
 	}
   
+  componentWillUnmount(){
+    this.query();
+  }
 
 	getChats = async () => {
-    let ultChat = this.props.comments.length > 0 ? this.props.comments[0].createdAt: '';
-    console.log('el ultchat es ', ultChat, this.props.comments.length);
-    await this.props.getComments(this.props.rooms.selected.id, ultChat );
-    this.setState({ texto: '' });
-    let { comments } = this.props;
-    console.log({ comments });
-    
 
-    // comments.subscribe( comments => {
-    //   //let tempChats = [ ...this.state.chats, ...comments]; 
-    //   this.setState( { 
-    //       ...this.state, 
-    //       chats: comments
-    //   },()=>{
-    //     console.log('los chats', this.state.chats);
-    //   });
-    // });    
+    const refRoomId = this.db.collection('rooms').doc(this.props.rooms.selected.id);
+    let dateTo = this.state.chats.length >0 ? this.state.chats[0].createdAt: '';
+
+    let ref = (dateTo ==='' ? this.db.collection('chats')
+    .where("roomId","==",refRoomId)
+    .orderBy("createdAt", "desc")
+    .limit(10)
+    :
+    this.db.collection('chats')
+    .where("roomId","==",refRoomId)
+    .orderBy("createdAt", "desc")
+    .endBefore(dateTo)
+    .limit(10)
+    );  
+
+    this.query = ref.onSnapshot( snapshot => {
+      snapshot.docs.map( async doc => {
+        let chats = [...this.state.chats];  
+        let user = await doc.data().userId.get();  
+        let chat = {
+            id: doc.id,
+            ...doc.data(),
+            user: { id: user.id, ...user.data() },
+        }
+        console.log(chat);
+        if(!this.state.chats.find(chatArray => chatArray.id === chat.id )){ 
+          chats.push(chat); 
+          //for (const chat of chats) {
+            this.setState({
+              ...this.state,
+              chats: [chat,...chats]
+            });            
+          //}      
+        }  
+      });      
+    });
 	}
 
  // loadPrivateChat = async() => {
@@ -77,9 +103,10 @@ class Chat extends Component {
         await this.props.saveComment('chats',comment);
         console.log(this.props);
         this.setState({texto: ""});
-        this.getChats();	        
+      
 	    }
-	}
+  }
+  
 
 	handlerClick = async (e) => {
 
@@ -116,7 +143,6 @@ class Chat extends Component {
   }
  
 	handlerInputChange = (e) => {
-    //console.log(e.target.value)
 		this.setState({ texto: e.target.value });
    
 	}
@@ -129,8 +155,6 @@ class Chat extends Component {
 
 	render (){
     
-    // const {rooms} = this.props; 
-
     const chatsBox = (
        this.state.chats.map( chat => (
                  <ChatBox key = { chat.id }
@@ -172,9 +196,152 @@ class Chat extends Component {
 }
 
 const mapStateToProps = state => ({
-  rooms: state.roomsReducer.rooms,
+  rooms: state.rooms,
   auth: state.authReducer.auth,
-  comments: state.chatReducer.comments
+  comments: state.comments
 });
 
 export default connect( mapStateToProps, {saveComment, getComments} ) (Chat);
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// import React, { useEffect, useState } from 'react';
+// import UsersOnline from './UsersOnline';
+// import ChatBox from './ChatBox';
+// import MessageBox from './MessageBox';
+// import HeaderChat from './HeaderChat';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { saveComment, getComments } from  '../../actions/chatActions';
+// import firebase from '../db/firestore';
+
+
+// const Chat = (props) => {
+//   const db = firebase.firestore();
+//   const [texto,setTexto] = useState('');
+//   const [chats, setChats] = useState([]);
+//   const rooms = useSelector((state) => state.rooms);
+//   const auth = useSelector((state) => state.authReducer.auth);
+
+//   useEffect(() => {
+//     getChats()
+//   },[]);
+
+
+// 	const getChats = async () => {
+//     const refRoomId = db.collection('rooms').doc(rooms.selected.id);
+//     let dateTo = chats.length >0 ? chats[0].createdAt: '';
+
+//     let ref = (dateTo ==='' ? db.collection('chats')
+//     .where("roomId","==",refRoomId)
+//     .orderBy("createdAt", "desc")
+//     .limit(10)
+//     :
+//     db.collection('chats')
+//     .where("roomId","==",refRoomId)
+//     .orderBy("createdAt", "desc")
+//     .endBefore(dateTo)
+//     .limit(10)
+//     );  
+
+//     ref.onSnapshot( snapshot => {
+//       let chatTem = [];
+//       snapshot.docs.map( async doc => {
+//        let user = await doc.data().userId.get();  
+//        let chat = {
+//            id: doc.id,
+//            ...doc.data(),
+//            user: { id: user.id, ...user.data() },
+//        }
+//        if(!chatTem.find(chatArray => chatArray.id === chat.id )){
+//           setChats([...chats, chat]);
+//        }  
+      
+//       }       
+//      );
+    
+//     })
+
+//   }
+  
+//   const handlerInputKey = async (e) => {
+//     if (e.key === 'Enter') {
+
+//       let comment = {
+//         userId: auth.user.uid,
+//         message: texto,
+//         roomId: rooms.selected.id
+//       }
+//       //await dispacth( saveComment('chats',comment));
+//       setTexto('');
+//       //getChats();	        
+//     }
+//   }
+  
+  
+
+//   const viewPrivateChats = (user) => {
+//     // console.log('test  ' + user.id);
+//     // this.setState({
+//     //     ...this.state,
+//     //     user2: user,
+//     //     isRomm: false
+//     // }, () =>{
+//     //     this.loadPrivateChat();
+//     //   } 
+//     // );    
+//   }
+
+//   const viewRoomChats = () => {
+//     // this.setState({
+//     //   isRomm: true
+//     // }, () =>{
+//     //     this.getChats();
+//     // } );
+//   }
+
+//   const	handlerInputChange = (e) => {
+//     //console.log(e.target.value)
+// 		setTexto( e.target.value );
+    
+//   }
+
+
+//   return (
+//     <div className="row mb-0 " >
+//       <div className = "col-4  p-0" >
+//         <UsersOnline  viewPrivateChats = { viewPrivateChats }
+//                       viewRoomChats = { viewRoomChats }
+//                       />
+//       </div>           
+//       <div className = "col-8 m-0 border-light containerChats p-0 " >
+//         <HeaderChat
+//           nameChat = { rooms.selected.name }
+//         />
+    
+//         <div className="messageChats">
+//           { chats.length > 0 ? (chats.map(  chat => (
+//                 <ChatBox key = { chat.id }
+//                         chat= { { ...chat, me: auth.user.uid } } />
+//           ))): null
+//           }
+//           <hr></hr>
+//         </div>
+//         <div className="footer">
+//           <button className="btn btn-success" onClick={ () => {console.log({chats})}}>Ver chats</button>
+//           <MessageBox 
+//               handlerInputChange = { handlerInputChange }
+//               handlerInputKey = { handlerInputKey }
+//               message = { texto }
+//           />
+//         </div>
+//       </div> 
+//     </div>
+//   );
+// };
+
+// export default Chat;
+
+
+
+
+

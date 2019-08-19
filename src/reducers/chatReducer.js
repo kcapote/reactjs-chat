@@ -11,13 +11,11 @@ export default (state = iniatialState, action) => {
       return state;
 
     case LIST_COMMENTS:
-    console.log('action', action.payload);
-    let chats = JSON.parse(JSON.stringify(action.payload));
-    chats = chats.reverse();
-    console.log('ation chat', chats);
+      console.log('el state es ',state.comments, ' el payload es ', action.payload);
       return {
-        comments: action.payload
-    }
+        ...state,
+        comments:  [ ...state.comments, ...action.payload]
+      }
 
     default:
       return state;  
